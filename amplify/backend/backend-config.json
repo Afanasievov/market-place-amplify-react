@@ -1,1 +1,26 @@
-{}
+{
+	"auth": {
+		"marketplaceamplifyreb40108ec": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"api": {
+		"marketplaceamplifyre": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+						"userPoolConfig": {
+							"userPoolId": "authmarketplaceamplifyreb40108ec"
+						}
+					}
+				}
+			}
+		}
+	}
+}

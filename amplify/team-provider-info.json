@@ -10,6 +10,11 @@
             "StackName": "amplify-marketplaceamplifyre-dev-173920",
             "StackId": "arn:aws:cloudformation:us-east-1:324463932167:stack/amplify-marketplaceamplifyre-dev-173920/351fad20-9395-11ea-90d2-0a3238f55eb3",
             "AmplifyAppId": "diiw93oy8dqs"
+        },
+        "categories": {
+            "auth": {
+                "marketplaceamplifyreb40108ec": {}
+            }
         }
     }
 }
