@@ -1,3 +1,15 @@
 {
-  "extends": ["airbnb", "airbnb/hooks"]
+  "env": {
+    "browser": true
+  },
+  "extends": [
+    "airbnb",
+    "airbnb/hooks"
+  ],
+  "ignorePatterns": [
+    "src/serviceWorker.js"
+  ],
+  "rules": {
+    "react/jsx-filename-extension": 0
+  }
 }
