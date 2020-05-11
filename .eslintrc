@@ -6,11 +6,6 @@
     "airbnb",
     "airbnb/hooks"
   ],
-  "ignorePatterns": [
-    "config",
-    "scripts",
-    "src/serviceWorker.js"
-  ],
   "rules": {
     "react/jsx-filename-extension": 0
   }

@@ -1,25 +1,9 @@
 import React from 'react';
+import { withAuthenticator } from 'aws-amplify-react';
+import '@aws-amplify/ui/dist/style.css';
 
 function App() {
-  return (
-    <div>
-      <header>
-        <p>
-          Edit
-          <code>src/App.js</code>
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return <div>App</div>;
 }
 
-export default App;
+export default withAuthenticator(App);
