@@ -74,10 +74,18 @@ function App() {
     return Hub.remove('auth');
   }, []);
 
+  const handleSignOut = async () => {
+    try {
+      await Auth.signOut();
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+
   return user ? (
     <Router>
       <>
-        <Navbar user={user} />
+        <Navbar user={user} handleSignOut={handleSignOut} />
         <div className="app-container">
           <Route exact path="/" component={HomePage} />
           <Route path="/profile" component={ProfilePage} />

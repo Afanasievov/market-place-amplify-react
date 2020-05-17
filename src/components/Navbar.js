@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu as Nav, Icon, Button } from 'element-react';
 import { NavLink } from 'react-router-dom';
 
-export default ({ user }) => (
+export default ({ user, handleSignOut }) => (
   <Nav mode="horizontal" theme="dark" defaultActive="1">
     <div className="nav-container">
       <Nav.Item index="1">
@@ -29,7 +29,9 @@ export default ({ user }) => (
           </NavLink>
         </Nav.Item>
         <Nav.Item index="4">
-          <Button type="warning">Sign Out</Button>
+          <Button type="warning" onClick={handleSignOut}>
+            Sign Out
+          </Button>
         </Nav.Item>
       </div>
     </div>
