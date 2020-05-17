@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Authenticator, AmplifyTheme } from 'aws-amplify-react';
 import { Auth, Hub, Logger } from 'aws-amplify';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import MarketPage from './pages/MarketPage';
+import ProfilePage from './pages/ProfilePage';
+
 import '@aws-amplify/ui/dist/style.css';
+import './App.css';
 
 const logger = new Logger('App.js', process.env === 'production' ? 'INFO' : 'DEBUG');
 
@@ -66,7 +72,23 @@ function App() {
     return Hub.remove('auth');
   }, []);
 
-  return user ? <div>App</div> : <Authenticator theme={theme} />;
+  return user ? (
+    <Router>
+      <>
+        <div className="app-container">
+          <Route exact path="/" component={HomePage} />
+          <Route path="/profile" component={ProfilePage} />
+          <Route
+            exact
+            path="/markets/:id"
+            component={({ match }) => <MarketPage id={match.params.id} />}
+          />
+        </div>
+      </>
+    </Router>
+  ) : (
+    <Authenticator theme={theme} />
+  );
 }
 
 export default App;
