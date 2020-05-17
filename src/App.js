@@ -33,7 +33,9 @@ const theme = {
   },
 };
 
-function App() {
+export const UserContext = React.createContext();
+
+export default () => {
   const [user, setUser] = useState(null);
 
   const getUserData = async () => {
@@ -83,23 +85,23 @@ function App() {
   };
 
   return user ? (
-    <Router>
-      <>
-        <Navbar user={user} handleSignOut={handleSignOut} />
-        <div className="app-container">
-          <Route exact path="/" component={HomePage} />
-          <Route path="/profile" component={ProfilePage} />
-          <Route
-            exact
-            path="/markets/:id"
-            component={({ match }) => <MarketPage id={match.params.id} />}
-          />
-        </div>
-      </>
-    </Router>
+    <UserContext.Provider value={user}>
+      <Router>
+        <>
+          <Navbar user={user} handleSignOut={handleSignOut} />
+          <div className="app-container">
+            <Route exact path="/" component={HomePage} />
+            <Route path="/profile" component={ProfilePage} />
+            <Route
+              exact
+              path="/markets/:id"
+              component={({ match }) => <MarketPage id={match.params.id} />}
+            />
+          </div>
+        </>
+      </Router>
+    </UserContext.Provider>
   ) : (
     <Authenticator theme={theme} />
   );
-}
-
-export default App;
+};

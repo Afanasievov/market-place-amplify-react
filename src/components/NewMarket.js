@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+import React, { useState, useContext } from 'react';
+import { API, graphqlOperation, Logger } from 'aws-amplify';
 import { Form, Button, Dialog, Input, Notification } from 'element-react';
 import { createMarket } from '../graphql/mutations';
+import { UserContext } from '../App';
+
+const logger = new Logger('NewMarket.js', process.env === 'production' ? 'INFO' : 'DEBUG');
 
 export default () => {
   const [addMarketDialog, setAddMarketDialog] = useState(false);
   const [name, setName] = useState('');
+  const user = useContext(UserContext);
 
   const handleAddMarket = async () => {
     try {
       setAddMarketDialog(false);
       const input = {
         name,
+        owner: user.username,
       };
 
       await API.graphql(graphqlOperation(createMarket, { input }));
       setName('');
     } catch (error) {
+      logger.error(error);
       Notification.error({
         title: 'Error',
         message: `${error.message || 'Error adding market'}`,
