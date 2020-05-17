@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Authenticator, AmplifyTheme } from 'aws-amplify-react';
 import { Auth, Hub, Logger } from 'aws-amplify';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import 'element-theme-default';
 import HomePage from './pages/HomePage';
 import MarketPage from './pages/MarketPage';
 import ProfilePage from './pages/ProfilePage';
+import Navbar from './components/Navbar';
 
 import '@aws-amplify/ui/dist/style.css';
 import './App.css';
@@ -75,6 +77,7 @@ function App() {
   return user ? (
     <Router>
       <>
+        <Navbar user={user} />
         <div className="app-container">
           <Route exact path="/" component={HomePage} />
           <Route path="/profile" component={ProfilePage} />
