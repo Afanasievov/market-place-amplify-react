@@ -15,6 +15,12 @@
     "react/jsx-one-expression-per-line": [
       "off",
       {}
+    ],
+    "object-curly-newline": [
+      "error",
+      {
+        "ImportDeclaration": "never"
+      }
     ]
   }
 }
