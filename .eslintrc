@@ -22,6 +22,8 @@
         "ImportDeclaration": "never"
       }
     ],
-    "import/no-cycle": "warn"
+    "import/no-cycle": "warn",
+    "implicit-arrow-linebreak": "off",
+    "function-paren-newline": "off"
   }
 }
