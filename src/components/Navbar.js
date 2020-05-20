@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu as Nav, Icon, Button } from 'element-react';
 import { NavLink } from 'react-router-dom';
 
-export default ({ user, handleSignOut }) => (
+const Navbar = ({ user, handleSignOut }) => (
   <Nav mode="horizontal" theme="dark" defaultActive="1">
     <div className="nav-container">
       <Nav.Item index="1">
@@ -37,3 +37,5 @@ export default ({ user, handleSignOut }) => (
     </div>
   </Nav>
 );
+
+export default Navbar;

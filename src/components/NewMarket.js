@@ -6,7 +6,7 @@ import { UserContext } from '../App';
 
 const logger = new Logger('NewMarket.js', process.env === 'production' ? 'INFO' : 'DEBUG');
 
-export default () => {
+const NewMarket = () => {
   const tags = ['Arts', 'Web Dev', 'Crafts', 'Entertainment', 'Technology'];
   const initialOptions = tags.map((tag) => ({ value: tag, label: tag }));
 
@@ -100,3 +100,5 @@ export default () => {
     </>
   );
 };
+
+export default NewMarket;
