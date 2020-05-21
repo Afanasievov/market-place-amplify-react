@@ -6,7 +6,13 @@ import { UserContext } from '../App';
 
 const logger = new Logger('NewMarket.js', process.env === 'production' ? 'INFO' : 'DEBUG');
 
-const NewMarket = () => {
+const NewMarket = ({
+  handleSearch,
+  searchTerm,
+  handleSearchChange,
+  handleClearSearch,
+  isSearching,
+}) => {
   const tags = ['Arts', 'Web Dev', 'Crafts', 'Entertainment', 'Technology'];
   const initialOptions = tags.map((tag) => ({ value: tag, label: tag }));
 
@@ -54,6 +60,21 @@ const NewMarket = () => {
           className="market-title-button"
           onClick={() => setAddMarketDialog(true)}
         />
+
+        <Form inline onSubmit={handleSearch}>
+          <Form.Item>
+            <Input
+              placeholder="Search Markets..."
+              value={searchTerm}
+              icon="circle-cross"
+              onIconClick={handleClearSearch}
+              onChange={handleSearchChange}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button type="info" icon="search" onClick={handleSearch} loading={isSearching} />
+          </Form.Item>
+        </Form>
       </div>
 
       <Dialog
