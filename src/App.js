@@ -35,7 +35,7 @@ const theme = {
 
 export const UserContext = React.createContext();
 
-export default () => {
+const App = () => {
   const [user, setUser] = useState(null);
 
   const getUserData = async () => {
@@ -95,7 +95,7 @@ export default () => {
             <Route
               exact
               path="/markets/:id"
-              component={({ match }) => <MarketPage id={match.params.id} />}
+              component={({ match }) => <MarketPage user={user} id={match.params.id} />}
             />
           </div>
         </>
@@ -105,3 +105,5 @@ export default () => {
     <Authenticator theme={theme} />
   );
 };
+
+export default App;
