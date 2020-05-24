@@ -85,7 +85,7 @@ const App = () => {
   };
 
   return user ? (
-    <UserContext.Provider value={user}>
+    <UserContext.Provider value={{ user }}>
       <Router>
         <>
           <Navbar user={user} handleSignOut={handleSignOut} />

@@ -20,7 +20,7 @@ const NewMarket = ({
   const [name, setName] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
   const [options, setOptions] = useState(initialOptions);
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const handleAddMarket = async () => {
     try {
