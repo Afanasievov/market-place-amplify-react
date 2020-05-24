@@ -15,7 +15,7 @@ const MarketPage = ({ id, user }) => {
     const fetchMarket = async () => {
       const input = { id };
       const result = await API.graphql(graphqlOperation(getMarket, input));
-      await setMarket(result.data.getMarket);
+      setMarket(result.data.getMarket);
       setIsLoading(false);
     };
 
