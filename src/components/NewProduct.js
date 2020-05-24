@@ -7,7 +7,7 @@ import { createProduct } from '../graphql/mutations';
 import { convertDollarsToCents } from '../utils';
 import awsExports from '../aws-exports';
 
-const logger = new Logger('[NewProducts.js', 'INFO');
+const logger = new Logger('[NewProducts.js]', 'INFO');
 
 const NewProduct = ({ marketId }) => {
   const [description, setDescription] = useState('');
@@ -16,15 +16,21 @@ const NewProduct = ({ marketId }) => {
   const [imagePreview, setImagePreview] = useState('');
   const [image, setImage] = useState('');
   const [isLoading, setIsLoading] = useState();
+  const [percentUploaded, setPercentUploaded] = useState(0)
 
   const handleAddProduct = async () => {
     setIsLoading(true);
     try {
       const visibility = 'public';
       const { identityId } = await Auth.currentCredentials();
-      const filename = `/${visibility}/{identityId}/${Date.now()}-${image.name}`;
+      const filename = `${identityId}/${Date.now()}-${image.name}`;
       const uploadedFile = await Storage.put(filename, image.file, {
+        level: visibility,
         contentType: image.type,
+        progressCallback: progress => {
+          const percent = Math.round((progress.loaded/progress.total) * 100);
+          setPercentUploaded(percent)
+        }
       });
       const file = {
         key: uploadedFile.key,
@@ -85,6 +91,9 @@ const NewProduct = ({ marketId }) => {
             </div>
           </Form.Item>
           {imagePreview && <img className="image-preview" src={imagePreview} alt="Image Preview" />}
+          {percentUploaded > 0 && (
+            <Progress type="circle" className="progress" status="success" percentage={percentUploaded}/>
+          )}
           <PhotoPicker
             title="Product Image"
             preview="hidden"
