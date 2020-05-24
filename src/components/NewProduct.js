@@ -1,20 +1,54 @@
 /* eslint-disable */
 import React, { useState } from 'react';
+import { Auth, Storage, API, graphqlOperation, Logger } from 'aws-amplify';
 import { PhotoPicker } from 'aws-amplify-react';
 import { Form, Button, Input, Notification, Radio, Progress } from 'element-react';
+import { createProduct } from '../graphql/mutations';
+import { convertDollarsToCents } from '../utils';
+import awsExports from '../aws-exports';
 
-const NewProduct = () => {
+const logger = new Logger('[NewProducts.js', 'INFO');
+
+const NewProduct = ({ marketId }) => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [shipped, setShipped] = useState(false);
   const [imagePreview, setImagePreview] = useState('');
   const [image, setImage] = useState('');
+  const [isLoading, setIsLoading] = useState();
 
-  const handleAddProduct = () => {
-    console.log('NewProduct -> description', description);
-    console.log('NewProduct -> price', price);
-    console.log('NewProduct -> shipped', shipped);
-    console.log('NewProduct -> image', image);
+  const handleAddProduct = async () => {
+    setIsLoading(true);
+    try {
+      const visibility = 'public';
+      const { identityId } = await Auth.currentCredentials();
+      const filename = `/${visibility}/{identityId}/${Date.now()}-${image.name}`;
+      const uploadedFile = await Storage.put(filename, image.file, {
+        contentType: image.type,
+      });
+      const file = {
+        key: uploadedFile.key,
+        bucket: awsExports.aws_user_files_s3_bucket,
+        region: awsExports.aws_user_files_s3_bucket_region,
+      };
+      const input = {
+        productMarketId: marketId,
+        description,
+        shipped,
+        price: convertDollarsToCents(price),
+        file,
+      };
+      const result = await API.graphql(graphqlOperation(createProduct, { input }));
+      Notification({
+        title: 'Success',
+        message: 'Product successfully created!',
+        type: 'success',
+      });
+    } catch (error) {
+      logger.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -82,11 +116,12 @@ const NewProduct = () => {
           />
           <Form.Item>
             <Button
-              disable={!image || !description || !price}
+              disable={!image || !description || !price || isLoading}
               type="primary"
               onClick={handleAddProduct}
+              loading={isLoading}
             >
-              Add Product
+              {isLoading ? 'Loading' : 'Add Product'}
             </Button>
           </Form.Item>
         </Form>

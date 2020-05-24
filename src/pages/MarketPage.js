@@ -56,13 +56,13 @@ const MarketPage = ({ id, user }) => {
             )}
             name="1"
           >
-            <NewProduct />
+            <NewProduct marketId={id} />
           </Tabs.Pane>
         )}
         <Tabs.Pane
           label={(
             <>
-              <Icon name="menu" className="icon'" />
+              <Icon name="menu" className="icon" />
               Products ({market.products.items.length})
             </>
           )}
