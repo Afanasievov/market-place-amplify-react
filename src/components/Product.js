@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { S3Image } from 'aws-amplify-react';
-import { Card, Button, Dialog, Form, Input, Radio, Notification } from 'element-react';
+import { Card, Button, Dialog, Form, Input, Radio, Notification, Popover } from 'element-react';
 import { convertCentsToDollars, convertDollarsToCents } from '../utils';
 import { UserContext } from '../App';
 import PayButton from './PayButton';
-import { updateProduct } from '../graphql/mutations';
+import { updateProduct, deleteProduct } from '../graphql/mutations';
 
 const Product = ({ product }) => {
   const [updateProductDialog, setUpdateProductDialog] = useState(false);
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [shipped, setShipped] = useState(true);
+  const [deleteProductDialog, setDeleteProductDialog] = useState(false);
 
   const handleUpdateProduct = async (id) => {
     try {
@@ -28,6 +29,27 @@ const Product = ({ product }) => {
       Notification({
         title: 'Success',
         message: 'Product successfully updated!',
+        type: 'success',
+        duration,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, duration);
+    } catch (error) {
+      console.error('handleUpdateProduct -> error', error);
+    }
+  };
+
+  const handleDeleteProduct = async (id) => {
+    try {
+      setDeleteProductDialog(false);
+      const input = { id };
+      const duration = 2000;
+
+      await API.graphql(graphqlOperation(deleteProduct, { input }));
+      Notification({
+        title: 'Success',
+        message: 'Product successfully deleted!',
         type: 'success',
         duration,
       });
@@ -81,7 +103,42 @@ const Product = ({ product }) => {
                       setPrice(convertCentsToDollars(product.price));
                     }}
                   />
-                  <Button type="danger" icon="delete" />
+                  <Popover
+                    placement="top"
+                    width="160"
+                    visible={deleteProductDialog}
+                    content={(
+                      <>
+                        <p>Do you want to delete this?</p>
+                        <div className="text-right">
+                          <Button
+                            size="mini"
+                            type="text"
+                            className="m-1"
+                            onClick={() => setDeleteProductDialog(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            type="primary"
+                            size="mini"
+                            className="m-1"
+                            onClick={() => handleDeleteProduct(product.id)}
+                          >
+                            Confirm
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                  >
+                    <Button
+                      type="danger"
+                      icon="delete"
+                      onClick={() => {
+                        setDeleteProductDialog(true);
+                      }}
+                    />
+                  </Popover>
                 </>
               )}
             </div>
