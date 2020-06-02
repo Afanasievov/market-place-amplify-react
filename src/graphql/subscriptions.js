@@ -1,6 +1,87 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateProductCustom = /* GraphQL */ `
+  subscription OnCreateProductCustom {
+    onCreateProductCustom {
+      id
+      description
+      market {
+        id
+        name
+        products {
+          nextToken
+        }
+        tags
+        owner
+        createdAt
+      }
+      file {
+        bucket
+        region
+        key
+      }
+      price
+      shipped
+      owner
+      createdAt
+    }
+  }
+`;
+export const onUpdateProductCustom = /* GraphQL */ `
+  subscription OnUpdateProductCustom {
+    onUpdateProductCustom {
+      id
+      description
+      market {
+        id
+        name
+        products {
+          nextToken
+        }
+        tags
+        owner
+        createdAt
+      }
+      file {
+        bucket
+        region
+        key
+      }
+      price
+      shipped
+      owner
+      createdAt
+    }
+  }
+`;
+export const onDeleteProductCustom = /* GraphQL */ `
+  subscription OnDeleteProductCustom {
+    onDeleteProductCustom {
+      id
+      description
+      market {
+        id
+        name
+        products {
+          nextToken
+        }
+        tags
+        owner
+        createdAt
+      }
+      file {
+        bucket
+        region
+        key
+      }
+      price
+      shipped
+      owner
+      createdAt
+    }
+  }
+`;
 export const onCreateMarket = /* GraphQL */ `
   subscription OnCreateMarket {
     onCreateMarket {

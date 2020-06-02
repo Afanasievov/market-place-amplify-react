@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Logger } from 'aws-amplify';
 import { S3Image } from 'aws-amplify-react';
 import { Card, Button, Dialog, Form, Input, Radio, Notification, Popover } from 'element-react';
 import { convertCentsToDollars, convertDollarsToCents } from '../utils';
 import { UserContext } from '../App';
 import PayButton from './PayButton';
 import { updateProduct, deleteProduct } from '../graphql/mutations';
+
+const logger = new Logger('[Product.js]', 'INFO');
 
 const Product = ({ product }) => {
   const [updateProductDialog, setUpdateProductDialog] = useState(false);
@@ -32,11 +34,8 @@ const Product = ({ product }) => {
         type: 'success',
         duration,
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, duration);
     } catch (error) {
-      console.error('handleUpdateProduct -> error', error);
+      logger.error(error);
     }
   };
 
@@ -53,11 +52,8 @@ const Product = ({ product }) => {
         type: 'success',
         duration,
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, duration);
     } catch (error) {
-      console.error('handleUpdateProduct -> error', error);
+      logger.error(error);
     }
   };
 

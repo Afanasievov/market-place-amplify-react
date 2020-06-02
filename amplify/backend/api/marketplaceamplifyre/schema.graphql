@@ -52,3 +52,18 @@ type ShippingAddress {
   address_state: String!
   address_zip: String!
 }
+
+type Subscription {
+  onCreateProductCustom: Product
+    @aws_subscribe(mutations: ["createProduct"])
+    @aws_iam
+    @aws_cognito_user_pools
+  onUpdateProductCustom: Product
+    @aws_subscribe(mutations: ["updateProduct"])
+    @aws_iam
+    @aws_cognito_user_pools
+  onDeleteProductCustom: Product
+    @aws_subscribe(mutations: ["deleteProduct"])
+    @aws_iam
+    @aws_cognito_user_pools
+}

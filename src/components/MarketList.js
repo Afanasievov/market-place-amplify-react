@@ -3,9 +3,30 @@ import { Link } from 'react-router-dom';
 import { graphqlOperation } from 'aws-amplify';
 import { Connect } from 'aws-amplify-react';
 import { Loading, Card, Tag, Icon } from 'element-react';
-import { listMarkets } from '../graphql/queries';
+// import { listMarkets } from '../graphql/queries';
 import { onCreateMarket } from '../graphql/subscriptions';
 import Error from './Error';
+
+export const listMarkets = /* GraphQL */ `
+  query ListMarkets($filter: ModelMarketFilterInput, $limit: Int, $nextToken: String) {
+    listMarkets(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        products {
+          nextToken
+          items {
+            id
+          }
+        }
+        tags
+        owner
+        createdAt
+      }
+      nextToken
+    }
+  }
+`;
 
 const MarketList = ({ searchResults }) => {
   const onNewMarket = (prevQuery, newData) => {
@@ -71,12 +92,11 @@ const MarketList = ({ searchResults }) => {
                     </span>
                   </div>
                   <div>
-                    {market.tags
-                      && market.tags.map((tag) => (
-                        <Tag key={tag} type="danger" className="mx-1">
-                          {tag}
-                        </Tag>
-                      ))}
+                    {market.tags && market.tags.map((tag) => (
+                      <Tag key={tag} type="danger" className="mx-1">
+                        {tag}
+                      </Tag>
+                    ))}
                   </div>
                 </Card>
               </div>

@@ -44,7 +44,7 @@ const NewProduct = ({ marketId }) => {
         price: convertDollarsToCents(price),
         file,
       };
-      const result = await API.graphql(graphqlOperation(createProduct, { input }));
+      await API.graphql(graphqlOperation(createProduct, { input }));
       Notification({
         title: 'Success',
         message: 'Product successfully created!',
