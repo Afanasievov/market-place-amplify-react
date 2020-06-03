@@ -7,7 +7,9 @@ type Market @model @searchable {
   createdAt: String
 }
 
-type Product @model @auth(rules: [{ allow: owner, identityField: "sub" }]) {
+type Product
+  @model
+  @auth(rules: [{ allow: owner, identityField: "sub" }, { allow: private, operations: [read] }]) {
   id: ID!
   description: String!
   market: Market @connection(name: "MarketProducts")
