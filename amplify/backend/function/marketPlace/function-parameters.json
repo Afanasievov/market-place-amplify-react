@@ -1,0 +1,12 @@
+{
+    "permissions": {
+        "api": {
+            "marketplaceamplifyre": [
+                "create",
+                "read",
+                "update",
+                "delete"
+            ]
+        }
+    }
+}

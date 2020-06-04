@@ -1,0 +1,41 @@
+{
+    "paths": [
+        {
+            "name": "/mp",
+            "lambdaFunction": "marketPlace",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            }
+        }
+    ],
+    "resourceName": "marketRESTAPI",
+    "apiName": "marketRESTAPI",
+    "functionArns": [
+        {
+            "lambdaFunction": "marketPlace"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 0,
+        "authRoleName": "amplify-marketplaceamplifyre-dev-173920-authRole",
+        "unAuthRoleName": "amplify-marketplaceamplifyre-dev-173920-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "marketPlace",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
