@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Logger } from 'aws-amplify';
 import { Tabs, Icon, Card } from 'element-react';
 import { convertCentsToDollars } from '../utils';
 
@@ -10,7 +10,7 @@ const getUser = /* GraphQL */ `
       username
       email
       registered
-      orders {
+      orders(sortDirection: DESC, limit: 999) {
         items {
           id
           createdAt
@@ -35,18 +35,24 @@ const getUser = /* GraphQL */ `
   }
 `;
 
+const logger = new Logger('[ProfilePage.js]', 'INFO');
+
 export default ({ user }) => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    const getOrders = async () => {
-      const input = { id: user.attributes.sub };
-      const result = await API.graphql(graphqlOperation(getUser, input));
+    try {
+      const getOrders = async () => {
+        const input = { id: user.attributes.sub };
+        const result = await API.graphql(graphqlOperation(getUser, input));
 
-      setOrders(result.data.getUser.orders.items);
-    };
+        setOrders(result.data.getUser.orders.items);
+      };
 
-    getOrders();
+      getOrders();
+    } catch (error) {
+      logger.error(error);
+    }
   }, [user]);
 
   return (
