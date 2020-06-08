@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import createBrowserHistory from 'history/createBrowserHistory';
 import { Authenticator, AmplifyTheme } from 'aws-amplify-react';
 import { Auth, API, Hub, Logger, graphqlOperation } from 'aws-amplify';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Router, Route } from 'react-router-dom';
 import 'element-theme-default';
 import HomePage from './pages/HomePage';
 import MarketPage from './pages/MarketPage';
@@ -12,6 +13,8 @@ import { registerUser } from './graphql/mutations';
 
 import '@aws-amplify/ui/dist/style.css';
 import './App.css';
+
+export const history = createBrowserHistory();
 
 const logger = new Logger('App.js', process.env === 'production' ? 'INFO' : 'DEBUG');
 
@@ -109,7 +112,7 @@ const App = () => {
 
   return user ? (
     <UserContext.Provider value={{ user }}>
-      <Router>
+      <Router history={history}>
         <>
           <Navbar user={user} handleSignOut={handleSignOut} />
           <div className="app-container">
