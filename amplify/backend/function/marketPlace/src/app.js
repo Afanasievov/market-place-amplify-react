@@ -30,6 +30,8 @@ const sesv2 = new AWS.SESV2(config);
 
 const port = 3000;
 
+const convertCentsToDollars = (cents) => (cents / 100).toFixed(2);
+
 const app = express();
 app.use(bodyParser.json());
 app.use(awsServerlessExpressMiddleware.eventContext());
@@ -41,8 +43,10 @@ app.use((_, res, next) => {
 });
 
 const chargeHandler = async (req, res, next) => {
-  const { token } = req.body;
-  const { currency, amount, description, shipped } = req.body.charge;
+  const {
+    token,
+    charge: { currency, amount, description },
+  } = req.body;
 
   try {
     const charge = await stripe.charges.create({
@@ -53,9 +57,6 @@ const chargeHandler = async (req, res, next) => {
     });
 
     if (charge.status === 'succeeded') {
-      req.charge = charge;
-      req.shipped = shipped;
-      req.description = description;
       next();
     }
   } catch (error) {
@@ -64,19 +65,57 @@ const chargeHandler = async (req, res, next) => {
 };
 
 const emailHandler = async (req, res) => {
-  const { charge, shipped, description } = req;
-  const { token } = req.body;
+  const {
+    email: { shipped, customerEmail, ownerEmail },
+    charge: { amount, currency, description },
+    token: {
+      // eslint-disable-next-line camelcase
+      card: { name, address_line1, address_city, address_state, address_country, address_zip },
+    },
+  } = req.body;
   const params = {
     Content: {
       Simple: {
         Body: {
           Html: {
-            Data: `<p>Order Details</p>
-            <div>Amount: ${(charge.amount / 100).toFixed(2)} ${charge.currency}</div>
-            <div>Shipped: ${shipped}</div>
-            <div>Description: ${description}</div>
-            <div>Email: ${token.email}</div>
+            /* eslint-disable */
+            Data: `
+            <h3>Order Details</h3>
+            <p>
+              <span style="font-weight: bold">
+                ${description}
+              </span> - ${convertCentsToDollars(amount)} ${currency}
+            </p>
+            <p>
+              Customer Email: <a href="mailto:${customerEmail}>${customerEmail}</a>
+            </p>
+            <p>
+              Contact your Seller: <a href="mailto:${ownerEmail}>${ownerEmail}</a>
+            </p>
+
+            ${
+              shipped
+                ? `
+              <h4>Mailing Address</h4>
+              <p>${name}</p>
+              <p>${address_line1}</p>
+              <p>${address_country} ${address_city}, ${
+                    address_state ? address_state : ''
+                  } ${address_zip} </p>
+              `
+                : 'Emailed Product'
+            }
+
+            <p style="font-style: italic; color: grey;">
+              ${
+                shipped
+                  ? 'Your product will be shipped soon'
+                  : 'Check your verified email for your emailed product'
+              }
+            </p>
             `,
+            /* eslint-enable */
+            Charset: 'UTF-8',
           },
         },
         Subject: {
@@ -85,7 +124,7 @@ const emailHandler = async (req, res) => {
       },
     },
     Destination: {
-      ToAddresses: [ADMIN_EMAIL],
+      ToAddresses: [ownerEmail, customerEmail],
     },
     FromEmailAddress: ADMIN_EMAIL,
   };
