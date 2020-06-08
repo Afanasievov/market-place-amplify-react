@@ -23,7 +23,7 @@ const Navbar = ({ user, handleSignOut }) => (
           <span className="app-user">Hello, {user.username}</span>
         </Nav.Item>
         <Nav.Item index="3">
-          <NavLink to="profile" className="nav-link">
+          <NavLink to="/profile" className="nav-link">
             <Icon name="setting" />
             Profile
           </NavLink>

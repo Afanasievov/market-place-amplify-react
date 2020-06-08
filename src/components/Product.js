@@ -59,8 +59,8 @@ const Product = ({ product }) => {
 
   return (
     <UserContext.Consumer>
-      {({ user }) => {
-        const isProductOwner = user && user.attributes.sub === product.owner;
+      {({ userAttributes }) => {
+        const isProductOwner = userAttributes && userAttributes.sub === product.owner;
 
         return (
           <div className="card-container">
@@ -81,7 +81,15 @@ const Product = ({ product }) => {
                 </div>
                 <div className="text-right">
                   $<span className="mx-1">{convertCentsToDollars(product.price)}</span>
-                  {!isProductOwner && <PayButton product={product} user={user} />}
+                  {
+                    !isProductOwner
+                    && (
+                      <PayButton
+                        product={product}
+                        userAttributes={userAttributes}
+                      />
+                    )
+                  }
                 </div>
               </div>
             </Card>

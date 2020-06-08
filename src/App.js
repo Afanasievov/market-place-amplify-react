@@ -42,11 +42,18 @@ export const UserContext = React.createContext();
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [userAttributes, setUserAttributes] = useState(null);
 
+  const getUserAttributes = async (authUserData) => {
+    const attributesArr = await Auth.userAttributes(authUserData);
+    const attributesObj = await Auth.attributesToObject(attributesArr);
+    setUserAttributes(attributesObj);
+  };
   const getUserData = async () => {
     try {
       const authenticated = await Auth.currentAuthenticatedUser();
       setUser(authenticated);
+      getUserAttributes(authenticated);
     } catch (error) {
       setUser(null);
     }
@@ -54,8 +61,8 @@ const App = () => {
 
   useEffect(() => {
     getUserData();
-  }, []);
-
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // TODO: remove eslint disabling
   const registerNewUser = async (signInData) => {
     const getUserInput = {
       id: signInData.signInUserSession.idToken.payload.sub,
@@ -100,7 +107,8 @@ const App = () => {
     });
 
     return Hub.remove('auth');
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // TODO: remove eslint disabling
 
   const handleSignOut = async () => {
     try {
@@ -111,13 +119,16 @@ const App = () => {
   };
 
   return user ? (
-    <UserContext.Provider value={{ user }}>
+    <UserContext.Provider value={{ user, userAttributes }}>
       <Router history={history}>
         <>
           <Navbar user={user} handleSignOut={handleSignOut} />
           <div className="app-container">
             <Route exact path="/" component={HomePage} />
-            <Route path="/profile" component={() => <ProfilePage user={user} />} />
+            <Route
+              path="/profile"
+              component={() => <ProfilePage user={user} userAttributes={userAttributes} />}
+            />
             <Route
               exact
               path="/markets/:id"
