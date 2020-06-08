@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { API, graphqlOperation, Logger } from 'aws-amplify';
-import { Tabs, Icon, Card } from 'element-react';
+import { Tabs, Icon, Card, Table, Tag, Button } from 'element-react';
 import { convertCentsToDollars } from '../utils';
 
 const getUser = /* GraphQL */ `
@@ -39,6 +39,46 @@ const logger = new Logger('[ProfilePage.js]', 'INFO');
 
 export default ({ user }) => {
   const [orders, setOrders] = useState([]);
+  const [columns] = useState([
+    { prop: 'name', width: '150' },
+    { prop: 'value', width: '330' },
+    {
+      prop: 'tag',
+      width: '150',
+      render: (row) => {
+        if (row.name === 'Email') {
+          const emailVerified = user.attributes.email_verified;
+          return emailVerified ? (
+            <Tag type="success">Verified</Tag>
+          ) : (
+            <Tag type="danger">Verified</Tag>
+          );
+        }
+        return undefined;
+      },
+    },
+    {
+      prop: 'operations',
+      render: (row) => {
+        switch (row.name) {
+          case 'Email':
+            return (
+              <Button type="info" size="small">
+                Edit
+              </Button>
+            );
+          case 'Delete Profile':
+            return (
+              <Button type="danger" size="small">
+                Delete
+              </Button>
+            );
+          default:
+            return undefined;
+        }
+      },
+    },
+  ]);
 
   useEffect(() => {
     try {
@@ -68,6 +108,33 @@ export default ({ user }) => {
           )}
         >
           <h2 className="header">Profile Summary</h2>
+          <Table
+            columns={columns}
+            data={[
+              {
+                name: 'Your Id',
+                value: user.attributes.sub,
+              },
+              {
+                name: 'Username',
+                value: user.username,
+              },
+              {
+                name: 'Email',
+                value: user.attributes.email,
+              },
+              {
+                name: 'Phone Number',
+                value: user.attributes.phone_number,
+              },
+              {
+                name: 'Delete Profile',
+                value: 'Sorry to see you go',
+              },
+            ]}
+            showHeader={false}
+            rowClassName={(row) => row.name === 'Delete Profile' && 'delete-profile'}
+          />
         </Tabs.Pane>
         <Tabs.Pane
           name="2"
@@ -94,8 +161,7 @@ export default ({ user }) => {
                         <p>{shippingAddress.address_line1}</p>
                         <p>
                           {shippingAddress.city}, {shippingAddress.address_state}
-                          {shippingAddress.country} {' '}
-                          {shippingAddress.address_zip}
+                          {shippingAddress.country} {shippingAddress.address_zip}
                         </p>
                       </div>
                     </>
