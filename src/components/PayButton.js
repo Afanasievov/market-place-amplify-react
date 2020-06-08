@@ -22,6 +22,7 @@ const PayButton = ({ product, user }) => {
             currency: stripeConfig.currency,
             amount: product.price,
             description: product.description,
+            shipped: product.shipped,
           },
         },
       });
