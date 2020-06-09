@@ -14,7 +14,7 @@ import { // eslint-disable-line object-curly-newline
   Notification,
   MessageBox,
 } from 'element-react'; // eslint-disable-line object-curly-newline
-import { convertCentsToDollars } from '../utils';
+import { convertCentsToDollars, formatOrderDate } from '../utils';
 
 const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
@@ -242,7 +242,7 @@ export default ({ user, userAttributes }) => {
                     <p>Order Id: {id}</p>
                     <p>Order Description: {description}</p>
                     <p>Order Price: {convertCentsToDollars(price)}</p>
-                    <p>Purchased on {createdAt}</p>
+                    <p>Purchased on {formatOrderDate(createdAt)}</p>
                     {shippingAddress && (
                       <>
                         Shipping Address

@@ -6,6 +6,7 @@ import { onUpdateProductCustom, onDeleteProductCustom, onCreateProductCustom } f
 // import { getMarket } from '../graphql/queries';
 import NewProduct from '../components/NewProduct';
 import Product from '../components/Product';
+import { formatProductDate } from '../utils';
 
 export const getMarket = /* GraphQL */ `
   query GetMarket($id: ID!) {
@@ -140,7 +141,7 @@ export const MarketPage = ({ id, user, userAttributes }) => {
       <div className="items-center pt-2">
         <span style={{ color: 'var(--lightSquidInk)', paddingBottom: '1em' }}>
           <Icon name="date" />
-          {market.createdAt}
+          {formatProductDate(market.createdAt)}
         </span>
       </div>
 
