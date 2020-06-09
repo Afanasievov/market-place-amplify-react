@@ -35,10 +35,11 @@ export const getMarket = /* GraphQL */ `
 
 const logger = new Logger('[MarketPage.js]', 'INFO');
 
-const MarketPage = ({ id, user }) => {
+export const MarketPage = ({ id, user, userAttributes }) => {
   const [market, setMarket] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isMarketOwner, setIsMarketOwner] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
 
   useEffect(() => {
     const fetchMarket = async () => {
@@ -56,6 +57,12 @@ const MarketPage = ({ id, user }) => {
       setIsMarketOwner(user.username === market.owner);
     }
   }, [user, market]);
+
+  useEffect(() => {
+    if (userAttributes) {
+      setEmailVerified(userAttributes.email_verified);
+    }
+  }, [userAttributes]);
 
   useEffect(() => {
     const createSub = API.graphql(graphqlOperation(onCreateProductCustom)).subscribe({
@@ -148,7 +155,13 @@ const MarketPage = ({ id, user }) => {
             )}
             name="1"
           >
-            <NewProduct marketId={id} />
+            {emailVerified ? (
+              <NewProduct marketId={id} />
+            ) : (
+              <Link to="/profile" className="header">
+                Verify your email before adding Products
+              </Link>
+            )}
           </Tabs.Pane>
         )}
         <Tabs.Pane
@@ -170,5 +183,3 @@ const MarketPage = ({ id, user }) => {
     </>
   );
 };
-
-export default MarketPage;

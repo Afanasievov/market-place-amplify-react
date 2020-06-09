@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { API, graphqlOperation, Logger } from 'aws-amplify';
 import { S3Image } from 'aws-amplify-react';
 import { Card, Button, Dialog, Form, Input, Radio, Notification, Popover } from 'element-react';
@@ -61,6 +62,7 @@ const Product = ({ product }) => {
     <UserContext.Consumer>
       {({ userAttributes }) => {
         const isProductOwner = userAttributes && userAttributes.sub === product.owner;
+        const emailVerified = userAttributes && userAttributes.email_verified;
 
         return (
           <div className="card-container">
@@ -82,12 +84,18 @@ const Product = ({ product }) => {
                 <div className="text-right">
                   $<span className="mx-1">{convertCentsToDollars(product.price)}</span>
                   {
-                    !isProductOwner
-                    && (
-                      <PayButton
-                        product={product}
-                        userAttributes={userAttributes}
-                      />
+                    emailVerified ? (
+                      !isProductOwner
+                      && (
+                        <PayButton
+                          product={product}
+                          userAttributes={userAttributes}
+                        />
+                      )
+                    ) : (
+                      <Link to="/profile" className="link">
+                        Verify Email
+                      </Link>
                     )
                   }
                 </div>

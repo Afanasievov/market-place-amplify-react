@@ -5,7 +5,7 @@ import { Auth, API, Hub, Logger, graphqlOperation } from 'aws-amplify';
 import { Router, Route } from 'react-router-dom';
 import 'element-theme-default';
 import HomePage from './pages/HomePage';
-import MarketPage from './pages/MarketPage';
+import { MarketPage } from './pages/MarketPage';
 import ProfilePage from './pages/ProfilePage';
 import Navbar from './components/Navbar';
 import { getUser } from './graphql/queries';
@@ -132,7 +132,9 @@ const App = () => {
             <Route
               exact
               path="/markets/:id"
-              component={({ match }) => <MarketPage user={user} id={match.params.id} />}
+              component={({ match }) => (
+                <MarketPage id={match.params.id} user={user} userAttributes={userAttributes} />
+              )}
             />
           </div>
         </>
