@@ -12,6 +12,7 @@ import { // eslint-disable-line object-curly-newline
   Input,
   Message,
   Notification,
+  MessageBox,
 } from 'element-react'; // eslint-disable-line object-curly-newline
 import { convertCentsToDollars } from '../utils';
 
@@ -55,6 +56,31 @@ export default ({ user, userAttributes }) => {
   const [email, setEmail] = useState(userAttributes && userAttributes.email);
   const [verificationCode, setVerificationCode] = useState('');
   const [verificationForm, setVerificationForm] = useState(false);
+
+  const handleDeleteProfile = () => {
+    MessageBox.confirm(
+      'This will permanently delete your account. Continue?',
+      'Attention',
+      {
+        confirmButtonText: 'Delete',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+      },
+    ).then(async () => {
+      try {
+        await user.deleteUser();
+        window.location.reload();
+      } catch (error) {
+        logger.error(error);
+      }
+    }).catch(() => {
+      Message({
+        type: 'info',
+        message: 'Delete cancelled',
+      });
+    });
+  };
+
   const [columns] = useState([
     { prop: 'name', width: '150' },
     { prop: 'value', width: '330' },
@@ -85,7 +111,7 @@ export default ({ user, userAttributes }) => {
             );
           case 'Delete Profile':
             return (
-              <Button type="danger" size="small">
+              <Button type="danger" size="small" onClick={handleDeleteProfile}>
                 Delete
               </Button>
             );
